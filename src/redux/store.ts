@@ -3,7 +3,6 @@ import {persistReducer, persistStore} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import thunk from 'redux-thunk';
 
-import AppSlice from './slices/AppSlice';
 import CharacterSlice from './slices/CharacterSlice';
 
 const persistConfig = {
@@ -12,7 +11,6 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  app: AppSlice,
   character: CharacterSlice,
 });
 
