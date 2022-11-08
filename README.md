@@ -28,10 +28,10 @@
 This will start a simulator for you.
 
 ## Questions:
-- How are you ensuring data consistency in your flatlist (e.g. not show duplicates) when dealing with paginated content?
+### How are you ensuring data consistency in your flatlist (e.g. not show duplicates) when dealing with paginated content?
 I implemented this logic in here: https://github.com/reactionic127/obe-test/blob/master/src/redux/slices/CharacterSlice.ts#L63
 
-- How would you ensure this flatlist remains fast with many objects to be displayed?
+### How would you ensure this flatlist remains fast with many objects to be displayed?
 1. We need to use useMemo and React.memo to optimize the performance
 2. Use react-native-fast-image for cache images
 3. Use keyExtractor or key
