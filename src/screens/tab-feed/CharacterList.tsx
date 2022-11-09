@@ -6,7 +6,7 @@ import Header from '../../components/Header';
 import {
   fetchCharacters,
   Character,
-  CharacterSlice,
+  intializeCharacters,
 } from '../../redux/slices/CharacterSlice';
 import {RootState} from '../../redux/store';
 import ListItem from '../../components/ListItem';
@@ -49,7 +49,7 @@ export default function CharacterList() {
 
   const resetFeed = () => {
     // If reset button clicked, we should reset the store characters variables and initialize all state variables
-    dispatch(CharacterSlice.actions.intializeCharacters());
+    dispatch(intializeCharacters());
     setPullData(false);
     setFetchMore(false);
     setPageIndex(0);
