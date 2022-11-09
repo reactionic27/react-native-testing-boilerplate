@@ -412,6 +412,7 @@ Array [
                                                   },
                                                 ]
                                               }
+                                              testID="reset-btn"
                                             >
                                               <View
                                                 style={
@@ -537,6 +538,7 @@ Array [
                                                   undefined,
                                                 ]
                                               }
+                                              testID="pull-text"
                                             >
                                               Pull to load data
                                             </Text>

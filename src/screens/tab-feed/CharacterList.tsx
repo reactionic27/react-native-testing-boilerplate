@@ -75,7 +75,7 @@ export default function CharacterList() {
   const renderEmptyComponent = () => {
     return (
       <View style={styles.wrapper}>
-        <Text>Pull to load data</Text>
+        <Text testID="pull-text">Pull to load data</Text>
       </View>
     );
   };
@@ -102,7 +102,11 @@ export default function CharacterList() {
   return (
     <View style={styles.container}>
       <Header title="Characters" hasBack={false} />
-      <Button mode="contained" style={styles.button} onPress={resetFeed}>
+      <Button
+        mode="contained"
+        style={styles.button}
+        onPress={resetFeed}
+        testID="reset-btn">
         Reset
       </Button>
       {RenderList}
