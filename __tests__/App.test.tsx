@@ -20,58 +20,61 @@ describe('Character App', () => {
     jest.clearAllMocks();
   });
 
-  it('renders App correctly', async () => {
-    const container = renderWithProviders(<AppNavigator />);
-    expect(container).not.toBeNull();
-  });
-
-  it('should show reset button and pull to refresh data text in the first time', async () => {
-    const {getByTestId, getByText} = renderWithProviders(<AppNavigator />);
-    expect(getByTestId('reset-btn')).toBeDefined();
-    expect(getByText('Reset')).toBeDefined();
-    expect(getByTestId('pull-text')).toBeDefined();
-    expect(getByText('Pull to load data')).toBeDefined();
-  });
-
-  it('show fetch the first page of characters api when pull to refresh event is triggered', async () => {
-    mockedAxios.get.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: {
-          results: mockedResult,
-          info: mockedInfo,
-        },
-      }),
-    );
-    const {getByTestId} = renderWithNavigation(<CharacterList />);
-    const flatList = getByTestId('characters-flatlist');
-    expect(flatList).toBeDefined();
-    // Mock pull-to-refresh event
-    const {refreshControl} = flatList.props;
-    await act(async () => {
-      refreshControl.props.onRefresh();
+  describe('Initial Rendering', () => {
+    it('renders App correctly', async () => {
+      const container = renderWithProviders(<AppNavigator />);
+      expect(container).not.toBeNull();
     });
-    expect(getByTestId('character-item')).toBeDefined();
-  });
 
-  it('render error message if error thrown from api', async () => {
-    jest.clearAllMocks();
-    const {getByTestId, getByText} = renderWithNavigation(<CharacterList />);
-    await waitFor(() => {
-      return getByTestId('pull-text');
+    it('should show reset button and pull to refresh data text in the first time', async () => {
+      const {getByTestId, getByText} = renderWithProviders(<AppNavigator />);
+      expect(getByTestId('reset-btn')).toBeDefined();
+      expect(getByText('Reset')).toBeDefined();
+      expect(getByTestId('pull-text')).toBeDefined();
+      expect(getByText('Pull to load data')).toBeDefined();
     });
-    expect(getByText('Pull to load data')).toBeDefined();
+
+    it('render error message if error thrown from api', async () => {
+      const {getByTestId, getByText} = renderWithNavigation(<CharacterList />);
+      await waitFor(() => {
+        return getByTestId('pull-text');
+      });
+      expect(getByText('Pull to load data')).toBeDefined();
+    });
   });
 
-  it('should show flat list item if backend api send stable data', async () => {
-    mockedAxios.get.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: {
-          results: mockedResult,
-          info: mockedInfo,
-        },
-      }),
-    );
-    const {getByTestId} = renderWithNavigation(<CharacterList />);
-    expect(getByTestId('character-item')).toBeDefined();
+  describe('After api call success', () => {
+    it('show fetch the first page of characters api when pull to refresh event is triggered', async () => {
+      mockedAxios.get.mockImplementationOnce(() =>
+        Promise.resolve({
+          data: {
+            results: mockedResult,
+            info: mockedInfo,
+          },
+        }),
+      );
+      const {getByTestId} = renderWithNavigation(<CharacterList />);
+      const flatList = getByTestId('characters-flatlist');
+      expect(flatList).toBeDefined();
+      // Mock pull-to-refresh event
+      const {refreshControl} = flatList.props;
+      await act(async () => {
+        refreshControl.props.onRefresh();
+      });
+      expect(getByTestId('character-item')).toBeDefined();
+    });
+
+    it('should show flat list item if backend api send stable data', async () => {
+      mockedAxios.get.mockImplementationOnce(() =>
+        Promise.resolve({
+          data: {
+            results: mockedResult,
+            info: mockedInfo,
+          },
+        }),
+      );
+      const {getByTestId} = renderWithNavigation(<CharacterList />);
+      expect(getByTestId('character-item')).toBeDefined();
+    });
   });
 });
