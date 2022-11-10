@@ -18,7 +18,10 @@ const ListItem = ({item}: {item: Character}) => {
   };
 
   return (
-    <TouchableRipple onPress={() => onPressItem(item)} key={item.id}>
+    <TouchableRipple
+      onPress={() => onPressItem(item)}
+      key={item.id}
+      testID="character-item">
       <View style={styles.charactersItemWrapper}>
         <FastImage
           source={{uri: item.image}}

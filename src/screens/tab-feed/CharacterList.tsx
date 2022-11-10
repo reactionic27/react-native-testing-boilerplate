@@ -95,6 +95,7 @@ export default function CharacterList() {
         }}
         onRefresh={() => setPullData(true)}
         refreshing={isPullData}
+        testID="characters-flatlist"
       />
     );
   }, [characters, pageIndex]);
