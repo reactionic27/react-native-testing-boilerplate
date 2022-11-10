@@ -31,17 +31,24 @@ describe('Character App', () => {
       expect(getByTestId('pull-text')).toBeDefined();
       expect(getByText('Pull to load data')).toBeDefined();
     });
+  });
 
+  describe('After api call success', () => {
     it('render error message if error thrown from api', async () => {
+      mockedAxios.get.mockImplementationOnce(() =>
+        Promise.resolve({
+          data: {
+            error: 'There is nothing here',
+          },
+        }),
+      );
       const {getByTestId, getByText} = renderWithNavigation(<CharacterList />);
       await waitFor(() => {
         return getByTestId('pull-text');
       });
       expect(getByText('Pull to load data')).toBeDefined();
     });
-  });
 
-  describe('After api call success', () => {
     it('should show 20 character items of the first page of characters api when pull to refresh event is triggered', async () => {
       mockedAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
