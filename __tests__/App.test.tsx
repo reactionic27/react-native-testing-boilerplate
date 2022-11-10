@@ -1,14 +1,10 @@
-import {act, waitFor} from '@testing-library/react-native';
+import {act, cleanup, waitFor} from '@testing-library/react-native';
 import axios from 'axios';
 import * as React from 'react';
 import AppNavigator from '../src/navigations/Navigator';
 import CharacterList from '../src/screens/tab-feed/CharacterList';
-import {
-  mockedInfo,
-  mockedResult,
-  renderWithNavigation,
-  renderWithProviders,
-} from '../test-utils';
+import {renderWithNavigation, renderWithProviders} from '../test-utils';
+import {mockedInfo, mockedResult} from '../__mocks__/mock';
 
 jest.mock('axios');
 
@@ -19,6 +15,8 @@ describe('Character App', () => {
     jest.resetAllMocks();
     jest.clearAllMocks();
   });
+
+  afterEach(cleanup);
 
   describe('Initial Rendering', () => {
     it('renders App correctly', async () => {
@@ -44,7 +42,7 @@ describe('Character App', () => {
   });
 
   describe('After api call success', () => {
-    it('show fetch the first page of characters api when pull to refresh event is triggered', async () => {
+    it('should show 20 character items of the first page of characters api when pull to refresh event is triggered', async () => {
       mockedAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           data: {
@@ -53,7 +51,9 @@ describe('Character App', () => {
           },
         }),
       );
-      const {getByTestId} = renderWithNavigation(<CharacterList />);
+      const {getByTestId, getAllByTestId} = renderWithNavigation(
+        <CharacterList />,
+      );
       const flatList = getByTestId('characters-flatlist');
       expect(flatList).toBeDefined();
       // Mock pull-to-refresh event
@@ -61,7 +61,7 @@ describe('Character App', () => {
       await act(async () => {
         refreshControl.props.onRefresh();
       });
-      expect(getByTestId('character-item')).toBeDefined();
+      expect(getAllByTestId('character-item')).toHaveLength(20);
     });
 
     it('should show flat list item if backend api send stable data', async () => {
@@ -73,8 +73,8 @@ describe('Character App', () => {
           },
         }),
       );
-      const {getByTestId} = renderWithNavigation(<CharacterList />);
-      expect(getByTestId('character-item')).toBeDefined();
+      const {getAllByTestId} = renderWithNavigation(<CharacterList />);
+      expect(getAllByTestId('character-item')).toBeDefined();
     });
   });
 });
