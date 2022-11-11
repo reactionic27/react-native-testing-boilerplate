@@ -46,7 +46,7 @@ describe('Character App', () => {
         },
       });
       await waitFor(() => {
-        expect(getByText('System Alert')).toBeDefined();
+        expect(getByText('Failed to fetch')).toBeDefined();
       });
     });
 
@@ -98,7 +98,7 @@ describe('Character App', () => {
     it('should show system alert after clicked reset button', async () => {
       const {getByTestId, getByText} = renderWithProviders(<CharacterList />);
       fireEvent.press(getByTestId('reset-btn'));
-      expect(getByText('System Alert')).toBeDefined();
+      expect(getByText('All data has been resetted.')).toBeDefined();
     });
   });
 });
