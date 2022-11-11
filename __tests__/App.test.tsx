@@ -1,13 +1,12 @@
-import {act, cleanup, waitFor} from '@testing-library/react-native';
-import axios from 'axios';
+import {act, cleanup, fireEvent, waitFor} from '@testing-library/react-native';
 import * as React from 'react';
+import axios from 'axios';
 import AppNavigator from '../src/navigations/Navigator';
 import CharacterList from '../src/screens/tab-feed/CharacterList';
-import {renderWithNavigation, renderWithProviders} from '../test-utils';
+import {renderWithProviders} from '../test-utils';
 import {mockedInfo, mockedResult} from '../__mocks__/mock';
 
 jest.mock('axios');
-
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('Character App', () => {
@@ -18,7 +17,7 @@ describe('Character App', () => {
 
   afterEach(cleanup);
 
-  describe('Initial Rendering', () => {
+  describe('initial rendering', () => {
     it('renders App correctly', async () => {
       const container = renderWithProviders(<AppNavigator />);
       expect(container).not.toBeNull();
@@ -33,20 +32,22 @@ describe('Character App', () => {
     });
   });
 
-  describe('After api call success', () => {
-    it('render error message if error thrown from api', async () => {
-      mockedAxios.get.mockImplementationOnce(() =>
-        Promise.resolve({
-          data: {
-            error: 'There is nothing here',
-          },
-        }),
-      );
-      const {getByTestId, getByText} = renderWithNavigation(<CharacterList />);
-      await waitFor(() => {
-        return getByTestId('pull-text');
+  describe('after api call success', () => {
+    it('should show system alert if error thrown from api', async () => {
+      const characterState = {
+        characters: [],
+        fetchError: 'Failed to fetch',
+        isLoading: false,
+        totalPage: 0,
+      };
+      const {getByText} = renderWithProviders(<CharacterList />, {
+        preloadedState: {
+          character: characterState,
+        },
       });
-      expect(getByText('Pull to load data')).toBeDefined();
+      await waitFor(() => {
+        expect(getByText('System Alert')).toBeDefined();
+      });
     });
 
     it('should show 20 character items of the first page of characters api when pull to refresh event is triggered', async () => {
@@ -58,7 +59,7 @@ describe('Character App', () => {
           },
         }),
       );
-      const {getByTestId, getAllByTestId} = renderWithNavigation(
+      const {getByTestId, getAllByTestId} = renderWithProviders(
         <CharacterList />,
       );
       const flatList = getByTestId('characters-flatlist');
@@ -72,16 +73,32 @@ describe('Character App', () => {
     });
 
     it('should show flat list item if backend api send stable data', async () => {
-      mockedAxios.get.mockImplementationOnce(() =>
-        Promise.resolve({
-          data: {
-            results: mockedResult,
-            info: mockedInfo,
-          },
-        }),
-      );
-      const {getAllByTestId} = renderWithNavigation(<CharacterList />);
+      const characterState = {
+        characters: mockedResult,
+        fetchError: '',
+        isLoading: false,
+        totalPage: 20,
+      };
+      const {getAllByTestId} = renderWithProviders(<CharacterList />, {
+        preloadedState: {
+          character: characterState,
+        },
+      });
       expect(getAllByTestId('character-item')).toBeDefined();
+    });
+  });
+
+  describe('click reset button', () => {
+    it('should show empty view after clicked reset button', async () => {
+      const {getByTestId, getByText} = renderWithProviders(<CharacterList />);
+      fireEvent.press(getByTestId('reset-btn'));
+      expect(getByText('Pull to load data')).toBeDefined();
+    });
+
+    it('should show system alert after clicked reset button', async () => {
+      const {getByTestId, getByText} = renderWithProviders(<CharacterList />);
+      fireEvent.press(getByTestId('reset-btn'));
+      expect(getByText('System Alert')).toBeDefined();
     });
   });
 });

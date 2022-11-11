@@ -4,8 +4,10 @@ import {Provider as PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {PersistGate} from 'redux-persist/integration/react';
 
-import {persistor, store} from './redux/store';
+import {persistor, setupStore} from './redux/store';
 import AppNavigator from './navigations/Navigator';
+
+const store = setupStore();
 
 export default function App() {
   return (

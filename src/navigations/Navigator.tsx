@@ -10,7 +10,7 @@ const StackNavigator = createNativeStackNavigator();
 export default function AppNavigator() {
   return (
     <SafeAreaView style={styles.container}>
-      <NavigationContainer>
+      <NavigationContainer independent>
         <StackNavigator.Navigator
           screenOptions={{
             headerShown: false,

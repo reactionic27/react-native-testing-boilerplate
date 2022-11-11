@@ -8,7 +8,7 @@ export interface Location {
 }
 
 export interface Character {
-  id: number;
+  id: string;
   image: string;
   name: string;
   status: string;
@@ -38,10 +38,13 @@ export const fetchCharacters: any = createAsyncThunk(
   'feed/fetch-characters',
   async (pageIndex: number, thunkApi) => {
     try {
-      const result = await axios.get(
+      const response = await axios.get(
         `${CHARACTERS_FETCH_URL}?page=${pageIndex + 1}`,
       );
-      return result.data;
+      return {
+        results: response.data.results,
+        totalPage: response.data.info.pages,
+      };
     } catch (e) {
       return thunkApi.rejectWithValue('Failed to fetch');
     }
@@ -58,7 +61,7 @@ export const CharacterSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchCharacters.fulfilled, (state, action) => {
-      const {results, info} = action.payload;
+      const {results, totalPage} = action.payload;
       let updatedCharacters = [...state.characters, ...results];
       // To make sure list contents are unique value
       let uniqueCharacters = new Set(
@@ -72,7 +75,7 @@ export const CharacterSlice = createSlice({
       state.characters = action.meta.arg === 0 ? results : updatedCharacters;
       state.isLoading = false;
       state.fetchError = '';
-      state.totalPage = info.pages;
+      state.totalPage = totalPage;
     });
     builder.addCase(fetchCharacters.pending, state => {
       state.isLoading = true;

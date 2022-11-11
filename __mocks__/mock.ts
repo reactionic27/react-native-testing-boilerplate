@@ -19,7 +19,7 @@ export const mockedResult = Array.from({length: 20}).map(() => {
     image: faker.image.avatar(),
     episode: [faker.image.avatar()],
     url: faker.image.avatar(),
-    created: faker.date.birthdate(),
+    created: faker.date.past().toISOString(),
   };
 });
 
