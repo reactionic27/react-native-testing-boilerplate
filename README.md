@@ -1,4 +1,4 @@
-# obe-test
+# React Native Unit testing boilerplate project
 
 ## Setup
 
