@@ -101,7 +101,7 @@ export default function CharacterList() {
   }, [characters, pageIndex]);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="character-list-container">
       <Header title="Characters" hasBack={false} />
       <Button
         mode="contained"
