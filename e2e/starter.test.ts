@@ -1,4 +1,4 @@
-import React from 'react';
+import {device, expect} from 'detox';
 
 describe('CharacterApp', () => {
   beforeAll(async () => {
